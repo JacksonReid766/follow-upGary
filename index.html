@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Leads"/>
+  <title>Add Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --ink: #0e0e0e;
+      --ink2: #3a3a3a;
+      --ink3: #7a7a7a;
+      --paper: #f7f5f0;
+      --card: #ffffff;
+      --accent: #1a472a;
+      --accent2: #c8a951;
+      --lead-fill: #eef5f1;
+      --lead-border: #1a472a;
+      --lead-text: #1a472a;
+      --cust-fill: #fdf8ee;
+      --cust-border: #c8a951;
+      --cust-text: #8a6d1a;
+      --error: #c0392b;
+      --radius: 14px;
+      --shadow: 0 2px 20px rgba(0,0,0,0.07);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--paper);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px 64px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* Header */
+    .hdr { margin-bottom: 28px; }
+    .hdr-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .hdr-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .hdr-sub {
+      font-size: 13px;
+      color: var(--ink3);
+      font-weight: 400;
+    }
+    .hdr-line {
+      width: 40px;
+      height: 2px;
+      background: var(--accent2);
+      margin-top: 14px;
+      border-radius: 2px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s, border-color 0.2s;
+      animation: fadeUp 0.35s ease both;
+    }
+    .card:focus-within {
+      box-shadow: 0 4px 24px rgba(26,71,42,0.10);
+      border-color: rgba(26,71,42,0.15);
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.10s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.20s; }
+    .card:nth-child(5) { animation-delay: 0.25s; }
+    .card:nth-child(6) { animation-delay: 0.30s; }
+    .card:nth-child(7) { animation-delay: 0.35s; }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .label-opt {
+      font-size: 10px;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #bbb;
+    }
+
+    .inp {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--ink);
+      padding: 0;
+      line-height: 1.5;
+      -webkit-appearance: none;
+    }
+    .inp::placeholder { color: #c8c4bc; }
+
+    textarea.inp {
+      resize: none;
+      min-height: 72px;
+      line-height: 1.6;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+    .hint.err { color: var(--error); display: none; }
+    .inp.has-error { color: var(--error); }
+
+    /* Type selector */
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .type-btn {
+      padding: 14px 8px;
+      border-radius: 10px;
+      border: 1.5px solid #e8e5df;
+      background: #fafaf8;
+      color: var(--ink3);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      -webkit-appearance: none;
+    }
+    .type-btn .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: background 0.18s;
+    }
+    .type-btn.sel-lead {
+      border-color: var(--lead-border);
+      background: var(--lead-fill);
+      color: var(--lead-text);
+    }
+    .type-btn.sel-lead .dot { background: var(--lead-border); }
+    .type-btn.sel-cust {
+      border-color: var(--cust-border);
+      background: var(--cust-fill);
+      color: var(--cust-text);
+    }
+    .type-btn.sel-cust .dot { background: var(--cust-border); }
+
+    .referred-card { display: none; }
+
+    /* Submit */
+    .submit-wrap {
+      margin-top: 6px;
+      animation: fadeUp 0.35s ease 0.40s both;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 17px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      -webkit-appearance: none;
+    }
+    .submit-btn:active { background: #163d24; transform: scale(0.98); }
+
+    /* Loading state */
+    .submit-btn.loading {
+      background: #163d24;
+      pointer-events: none;
+    }
+    .submit-btn.loading::after {
+      content: '';
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    /* Success */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 52px 24px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.05);
+      animation: fadeUp 0.4s ease;
+    }
+    .success-check {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--lead-fill);
+      border: 2px solid var(--lead-border);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 24px;
+    }
+    .success-check.is-cust {
+      background: var(--cust-fill);
+      border-color: var(--cust-border);
+    }
+    .success-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .success-sub {
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 20px;
+      line-height: 1.6;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .success-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .badge-lead { background: var(--lead-fill); color: var(--lead-text); border: 1px solid var(--lead-border); }
+    .badge-cust { background: var(--cust-fill); color: var(--cust-text); border: 1px solid var(--cust-border); }
+
+    .reset-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: var(--radius);
+      border: 1.5px solid #e8e5df;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink2);
+      cursor: pointer;
+      transition: all 0.18s;
+      -webkit-appearance: none;
+    }
+    .reset-btn:active { border-color: var(--accent); color: var(--accent); }
+
+    /* Error toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--error);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      transition: transform 0.3s ease;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(192,57,43,0.35);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="hdr">
+    <div class="hdr-eyebrow">Fiber Sales</div>
+    <div class="hdr-title">Add New<br><em>Contact</em></div>
+    <div class="hdr-sub">Warm leads &amp; referral customers</div>
+    <div class="hdr-line"></div>
+  </div>
+
+  <div id="form-body">
+    <div class="card">
+      <div class="label">First name</div>
+      <input class="inp" type="text" placeholder="Jane" id="f-first" autocomplete="given-name"/>
+    </div>
+
+    <div class="card">
+      <div class="label">Last name</div>
+      <input class="inp" type="text" placeholder="Smith" id="f-last" autocomplete="family-name"/>
+    </div>
+
+    <div class="card">
+      <div class="label">Phone number</div>
+      <input class="inp" type="tel" inputmode="numeric" placeholder="6155550100" id="f-phone" maxlength="10" oninput="handlePhone(this)"/>
+      <div class="hint" id="phone-hint">10 digits · no spaces or dashes</div>
+      <div class="hint err" id="phone-err">Must be exactly 10 digits</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Address <span class="label-opt">optional</span></div>
+      <input class="inp" type="text" placeholder="123 Main St" id="f-address" autocomplete="street-address"/>
+    </div>
+
+    <div class="card">
+      <div class="label">Notes</div>
+      <textarea class="inp" id="f-notes" placeholder="e.g. Said to reach back in a few months. Contract ends in March. Wants to talk to spouse first."></textarea>
+      <div class="hint">Include timing or context — the agent uses this to decide when to reach out.</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Contact type</div>
+      <div class="type-row">
+        <div class="type-btn" id="btn-lead" onclick="selectType('lead')">
+          <span class="dot"></span>
+          Warm lead
+        </div>
+        <div class="type-btn" id="btn-cust" onclick="selectType('customer')">
+          <span class="dot"></span>
+          Current customer
+        </div>
+      </div>
+    </div>
+
+    <div class="card referred-card" id="referred-card">
+      <div class="label">Referred by <span class="label-opt">optional</span></div>
+      <input class="inp" type="text" placeholder="Customer name" id="f-referred"/>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="submit-btn" id="submit-btn" onclick="submitForm()">Add Contact</button>
+    </div>
+  </div>
+
+  <div class="success" id="success-screen">
+    <div class="success-check" id="success-icon">✓</div>
+    <div class="success-name" id="success-name"></div>
+    <div class="success-sub" id="success-sub"></div>
+    <div><span class="success-badge" id="success-badge"></span></div>
+    <br/>
+    <button class="reset-btn" onclick="resetForm()">Add another contact</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── REPLACE THIS WITH YOUR APPS SCRIPT WEB APP URL ───
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2cFUe3ufg--GVoYYzSZRoZDcR0XnqphJSjGoXh2Yb3-i8c-WY0Bu-MQnEAGsf5gw9Eg/exec';
+  // ──────────────────────────────────────────────────────
+
+  let selectedType = null;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function handlePhone(el) {
+    el.value = el.value.replace(/\D/g, '').slice(0, 10);
+    el.classList.remove('has-error');
+    document.getElementById('phone-err').style.display = 'none';
+    document.getElementById('phone-hint').style.display = 'block';
+  }
+
+  function selectType(type) {
+    selectedType = type;
+    document.getElementById('btn-lead').className = 'type-btn' + (type === 'lead' ? ' sel-lead' : '');
+    document.getElementById('btn-cust').className = 'type-btn' + (type === 'customer' ? ' sel-cust' : '');
+    document.getElementById('referred-card').style.display = type === 'lead' ? 'block' : 'none';
+  }
+
+  function submitForm() {
+    const first   = document.getElementById('f-first').value.trim();
+    const last    = document.getElementById('f-last').value.trim();
+    const phone   = document.getElementById('f-phone').value.trim();
+    const address = document.getElementById('f-address').value.trim();
+    const notes   = document.getElementById('f-notes').value.trim();
+    const referred = document.getElementById('f-referred').value.trim();
+
+    let valid = true;
+
+    if (!first) {
+      document.getElementById('f-first').focus();
+      showToast('First name is required');
+      valid = false;
+    }
+
+    if (phone.length !== 10) {
+      document.getElementById('f-phone').classList.add('has-error');
+      document.getElementById('phone-err').style.display = 'block';
+      document.getElementById('phone-hint').style.display = 'none';
+      if (valid) showToast('Phone must be 10 digits');
+      valid = false;
+    }
+
+    if (!selectedType) {
+      if (valid) showToast('Please select a contact type');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.classList.add('loading');
+    btn.textContent = 'Saving';
+
+    const payload = {
+      firstName: first,
+      lastName: last,
+      phone: phone,
+      address: address,
+      notes: notes,
+      referredBy: referred,
+      type: selectedType,
+      timestamp: new Date().toISOString()
+    };
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => showSuccess(first, last, selectedType))
+    .catch(() => showSuccess(first, last, selectedType)); // no-cors always resolves
+
+  }
+
+  function showSuccess(first, last, type) {
+    const isLead = type === 'lead';
+    const fullName = [first, last].filter(Boolean).join(' ');
+
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    document.getElementById('success-name').textContent = fullName;
+    document.getElementById('success-sub').textContent = isLead
+      ? 'Added to your warm leads and queued for monthly outreach.'
+      : 'Added to your referral program customers.';
+
+    const icon = document.getElementById('success-icon');
+    icon.textContent = '✓';
+    icon.className = 'success-check' + (isLead ? '' : ' is-cust');
+
+    const badge = document.getElementById('success-badge');
+    badge.textContent = isLead ? 'Warm lead' : 'Current customer';
+    badge.className = 'success-badge ' + (isLead ? 'badge-lead' : 'badge-cust');
+  }
+
+  function resetForm() {
+    selectedType = null;
+    ['f-first','f-last','f-phone','f-address','f-notes','f-referred'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('btn-lead').className = 'type-btn';
+    document.getElementById('btn-cust').className = 'type-btn';
+    document.getElementById('referred-card').style.display = 'none';
+    document.getElementById('f-phone').classList.remove('has-error');
+    document.getElementById('phone-err').style.display = 'none';
+    document.getElementById('phone-hint').style.display = 'block';
+
+    const btn = document.getElementById('submit-btn');
+    btn.classList.remove('loading');
+    btn.textContent = 'Add Contact';
+
+    document.getElementById('form-body').style.display = 'block';
+    document.getElementById('success-screen').style.display = 'none';
+  }
+</script>
+</body>
+</html>
