@@ -391,6 +391,13 @@
       <input class="inp" type="text" placeholder="Customer name" id="f-referred"/>
     </div>
 
+    <div id="instant-sms-wrap" style="display:none; margin: 0 0 16px 0;">
+      <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:15px; color:#e2e8f0;">
+        <input type="checkbox" id="send-now" style="width:18px;height:18px;accent-color:#22c55e;cursor:pointer;">
+        Send immediate text with my contact info
+      </label>
+    </div>
+
     <div class="submit-wrap">
       <button class="submit-btn" id="submit-btn" onclick="submitForm()">Add Contact</button>
     </div>
@@ -413,6 +420,13 @@
   // ─── REPLACE THIS WITH YOUR APPS SCRIPT WEB APP URL ───
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2cFUe3ufg--GVoYYzSZRoZDcR0XnqphJSjGoXh2Yb3-i8c-WY0Bu-MQnEAGsf5gw9Eg/exec';
   // ──────────────────────────────────────────────────────
+
+  const IS_LOCAL = window.location.hostname === 'localhost';
+  const LOCAL_SMS_URL = 'http://localhost:8080/send-sms';
+
+  if (IS_LOCAL) {
+    document.getElementById('instant-sms-wrap').style.display = 'block';
+  }
 
   let selectedType = null;
 
@@ -483,27 +497,41 @@
       timestamp: new Date().toISOString()
     };
 
+    const sendNow = IS_LOCAL && document.getElementById('send-now').checked;
+
     fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-    .then(() => showSuccess(first, last, selectedType))
-    .catch(() => showSuccess(first, last, selectedType)); // no-cors always resolves
+    .then(() => {
+      if (sendNow) {
+        return fetch(LOCAL_SMS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, firstName: first })
+        }).catch(() => null);
+      }
+    })
+    .then(() => showSuccess(first, last, selectedType, sendNow))
+    .catch(() => showSuccess(first, last, selectedType, sendNow));
 
   }
 
-  function showSuccess(first, last, type) {
+  function showSuccess(first, last, type, sentNow) {
     const isLead = type === 'lead';
     const fullName = [first, last].filter(Boolean).join(' ');
 
     document.getElementById('form-body').style.display = 'none';
     document.getElementById('success-screen').style.display = 'block';
     document.getElementById('success-name').textContent = fullName;
-    document.getElementById('success-sub').textContent = isLead
+
+    let sub = isLead
       ? 'Added to your warm leads and queued for monthly outreach.'
       : 'Added to your referral program customers.';
+    if (sentNow) sub += ' Immediate text sent!';
+    document.getElementById('success-sub').textContent = sub;
 
     const icon = document.getElementById('success-icon');
     icon.textContent = '✓';
