@@ -26,7 +26,7 @@ load_dotenv()
 MODEL = 'claude-sonnet-4-20250514'
 
 INITIAL_MESSAGE = """\
-Hey {first_name}! This is Gary — we chatted about fiber internet a while back. \
+Hey {first_name}! This is Jackson — we chatted about fiber internet a while back. \
 Just wanted to check in and see if the timing might work better now.
 
 Fast, reliable fiber starting at $49/mo, no contracts, free install. \
@@ -96,7 +96,7 @@ def handle_reply(lead: dict, reply_text: str) -> str | None:
                         'description': (
                             'The lead\'s intent:\n'
                             '  interested     — warm or positive, wants more info\n'
-                            '  book_call      — explicitly wants to talk to Gary / schedule\n'
+                            '  book_call      — explicitly wants to talk to Jackson / schedule\n'
                             '  question       — has a specific question before deciding\n'
                             '  maybe_later    — timing isn\'t right, open to future contact\n'
                             '  not_interested — clearly doesn\'t want to be contacted again'
@@ -106,7 +106,7 @@ def handle_reply(lead: dict, reply_text: str) -> str | None:
                         'type': 'string',
                         'description': (
                             'SMS reply to send. Conversational tone, under 200 characters. '
-                            'Do not use Gary\'s name as a sign-off — keep it natural.'
+                            'Do not use Jackson\'s name as a sign-off — keep it natural.'
                         ),
                     },
                     'note': {
@@ -120,7 +120,7 @@ def handle_reply(lead: dict, reply_text: str) -> str | None:
     ]
 
     system = f"""\
-You are a friendly assistant helping Gary follow up with warm leads for fiber internet via text.
+You are a friendly assistant helping Jackson follow up with warm leads for fiber internet via text.
 
 Lead: {first_name} {last_name}
 Current status: {status}
@@ -130,10 +130,10 @@ Service details (answer questions from this):
 - Fiber internet starting at $49/mo
 - No contracts, no installation fees
 - Speeds: 300 Mbps, 500 Mbps, and 1 Gbps plans available
-- Gary can do a quick 10-minute call to go over options and get them set up same week
+- Jackson can do a quick 10-minute call to go over options and get them set up same week
 
 Guidelines:
-- If they want to talk or seem ready: say Gary can give them a quick call and ask for a good time
+- If they want to talk or seem ready: say Jackson can give them a quick call and ask for a good time
 - If they have a question: answer it directly and briefly, then invite them to move forward
 - If they said "maybe later" or gave a timing hint: acknowledge it warmly, note the timing
 - If they're not interested: thank them, wish them well — no pressure at all

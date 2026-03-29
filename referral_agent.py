@@ -20,7 +20,7 @@ load_dotenv()
 MODEL = 'claude-sonnet-4-20250514'
 
 INITIAL_MESSAGE = """\
-Hey {first_name}! This is Gary with your fiber internet. Hope the connection's been solid!
+Hey {first_name}! This is Jackson with your fiber internet. Hope the connection's been solid!
 
 Quick heads up — we have a $50 referral bonus running right now. If you know anyone who'd want fast fiber internet, just reply with their name and number and I'll handle the rest. You get $50 when they sign up!\
 """
@@ -105,7 +105,7 @@ def handle_reply(customer: dict, reply_text: str) -> str | None:
                         'type': 'string',
                         'description': (
                             'The SMS text to send. Keep it conversational and under 200 characters. '
-                            'Do not include any prefixes like "Gary:" or "Reply:".'
+                            'Do not include any prefixes like "Jackson:" or "Reply:".'
                         ),
                     },
                 },
@@ -115,7 +115,7 @@ def handle_reply(customer: dict, reply_text: str) -> str | None:
     ]
 
     system = f"""\
-You are a friendly assistant helping Gary run a fiber internet referral program via text message.
+You are a friendly assistant helping Jackson run a fiber internet referral program via text message.
 
 Customer name: {first_name}
 Conversation history / notes: {notes or 'No prior history.'}
@@ -123,14 +123,14 @@ Conversation history / notes: {notes or 'No prior history.'}
 Referral program details:
 - Customers get $50 when a friend they refer signs up for fiber internet
 - Service starts at $49/mo, no contracts, free installation
-- Gary handles all the sales — the customer just needs to give a name and number
+- Jackson handles all the sales — the customer just needs to give a name and number
 
 Instructions:
 - If the customer provided a referral name and phone number, call collect_referral with those details
 - If they have questions, answer them briefly and invite them to share a referral
 - If they're not interested, be gracious and let them off the hook (no pressure)
 - Always call send_reply with a warm, natural response — like a real text, not a marketing message
-- If you called collect_referral, confirm in your reply that you've got the info and Gary will be in touch\
+- If you called collect_referral, confirm in your reply that you've got the info and Jackson will be in touch\
 """
 
     response = client.messages.create(
