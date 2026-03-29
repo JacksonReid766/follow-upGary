@@ -1,0 +1,47 @@
+name: Monthly Outreach Scheduler
+
+# Runs every Friday at 9 AM Central (3 PM UTC).
+# scheduler.py checks internally whether it's the last Friday of the month
+# and exits early if not — so this is safe to run weekly.
+on:
+  schedule:
+    - cron: '0 15 * * 5'   # every Friday at 15:00 UTC (9 AM CT / 10 AM ET)
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force run even if today is not the last Friday of the month'
+        type: boolean
+        default: false
+
+jobs:
+  run-scheduler:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scheduler
+        env:
+          ANTHROPIC_API_KEY:          ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS:              ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD:         ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_TOKEN:                ${{ secrets.GMAIL_TOKEN }}
+          GOOGLE_SHEET_ID:            ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SHEETS_CREDENTIALS:  ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+          OWNER_EMAIL:                ${{ secrets.OWNER_EMAIL }}
+        run: |
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            python scheduler.py --force
+          else
+            python scheduler.py
+          fi
