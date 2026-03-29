@@ -20,9 +20,9 @@ load_dotenv()
 MODEL = 'claude-sonnet-4-20250514'
 
 INITIAL_MESSAGE = """\
-Hey {first_name}! This is Jackson with your fiber internet. Hope the connection's been solid!
+Hey {first_name}! This is Jackson with BrightSpeed Fiber. Hope the connection's been solid!
 
-Quick heads up — we have a $50 referral bonus running right now. If you know anyone who'd want fast fiber internet, just reply with their name and number and I'll handle the rest. You get $50 when they sign up!\
+Quick heads up — we have a $50 referral bonus running right now. If you know anyone who'd want BrightSpeed Fiber, just reply with their name and number and I'll handle the rest. You get $50 when they sign up!\
 """
 
 
@@ -115,13 +115,13 @@ def handle_reply(customer: dict, reply_text: str) -> str | None:
     ]
 
     system = f"""\
-You are a friendly assistant helping Jackson run a fiber internet referral program via text message.
+You are a friendly assistant helping Jackson run a BrightSpeed Fiber referral program via text message.
 
 Customer name: {first_name}
 Conversation history / notes: {notes or 'No prior history.'}
 
 Referral program details:
-- Customers get $50 when a friend they refer signs up for fiber internet
+- Customers get $50 when a friend they refer signs up for BrightSpeed Fiber
 - Service starts at $49/mo, no contracts, free installation
 - Jackson handles all the sales — the customer just needs to give a name and number
 

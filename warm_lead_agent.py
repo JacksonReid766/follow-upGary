@@ -26,10 +26,10 @@ load_dotenv()
 MODEL = 'claude-sonnet-4-20250514'
 
 INITIAL_MESSAGE = """\
-Hey {first_name}! This is Jackson — we chatted about fiber internet a while back. \
+Hey {first_name}! This is Jackson with BrightSpeed Fiber — we chatted a while back. \
 Just wanted to check in and see if the timing might work better now.
 
-Fast, reliable fiber starting at $49/mo, no contracts, free install. \
+Fast, reliable BrightSpeed Fiber starting at $49/mo, no contracts, free install. \
 Happy to answer questions or set up a quick call if you're interested!\
 """
 
@@ -120,14 +120,14 @@ def handle_reply(lead: dict, reply_text: str) -> str | None:
     ]
 
     system = f"""\
-You are a friendly assistant helping Jackson follow up with warm leads for fiber internet via text.
+You are a friendly assistant helping Jackson follow up with warm leads for BrightSpeed Fiber via text.
 
 Lead: {first_name} {last_name}
 Current status: {status}
 Notes / history: {notes or 'No prior history.'}
 
 Service details (answer questions from this):
-- Fiber internet starting at $49/mo
+- BrightSpeed Fiber starting at $49/mo
 - No contracts, no installation fees
 - Speeds: 300 Mbps, 500 Mbps, and 1 Gbps plans available
 - Jackson can do a quick 10-minute call to go over options and get them set up same week
