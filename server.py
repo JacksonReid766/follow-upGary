@@ -19,12 +19,10 @@ load_dotenv()
 from sms import send_sms
 
 PORT = 8080
-GMAIL_ADDRESS = os.environ.get('GMAIL_ADDRESS', '')
 
 IMMEDIATE_SMS = """\
 Hey {first_name}, this is Jackson with BrightSpeed Fiber! \
-Great meeting you today. Feel free to reach me anytime at {email} — \
-I'll be in touch soon!\
+Great meeting you today. Feel free to reach me here anytime — I'll be in touch soon!\
 """
 
 
@@ -58,10 +56,7 @@ class Handler(BaseHTTPRequestHandler):
             result = {'success': False, 'error': 'Invalid phone number'}
         else:
             try:
-                message = IMMEDIATE_SMS.format(
-                    first_name=first_name,
-                    email=GMAIL_ADDRESS
-                )
+                message = IMMEDIATE_SMS.format(first_name=first_name)
                 send_sms(phone, message)
                 print(f"[server] Immediate SMS sent to {first_name} ({phone})")
                 result = {'success': True}
