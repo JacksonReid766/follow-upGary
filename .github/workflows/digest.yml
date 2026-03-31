@@ -1,0 +1,35 @@
+name: Daily Follow-up Digest
+
+# Runs every day at 9 AM Mountain Time (UTC-6 in MDT / UTC-7 in MST)
+# 9 AM MDT = 15:00 UTC (March–November)
+# 9 AM MST = 16:00 UTC (November–March)
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send daily digest
+        env:
+          GMAIL_ADDRESS:              ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD:         ${{ secrets.GMAIL_APP_PASSWORD }}
+          GOOGLE_SHEET_ID:            ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SHEETS_CREDENTIALS:  ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+          OWNER_EMAIL:                ${{ secrets.OWNER_EMAIL }}
+        run: python digest.py
