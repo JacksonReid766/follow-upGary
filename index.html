@@ -346,24 +346,24 @@
   <div id="form-body">
     <div class="card">
       <div class="label">First name</div>
-      <input class="inp" type="text" placeholder="Jane" id="f-first" autocomplete="given-name"/>
+      <input class="inp" type="text" placeholder="Jane" id="f-first" autocomplete="given-name" onkeydown="focusNext(event,'f-last')"/>
     </div>
 
     <div class="card">
       <div class="label">Last name</div>
-      <input class="inp" type="text" placeholder="Smith" id="f-last" autocomplete="family-name"/>
+      <input class="inp" type="text" placeholder="Smith" id="f-last" autocomplete="family-name" onkeydown="focusNext(event,'f-phone')"/>
     </div>
 
     <div class="card">
       <div class="label">Phone number <span class="label-opt">optional</span></div>
-      <input class="inp" type="tel" inputmode="numeric" placeholder="6155550100" id="f-phone" maxlength="10" oninput="handlePhone(this)"/>
+      <input class="inp" type="tel" inputmode="numeric" placeholder="6155550100" id="f-phone" maxlength="10" oninput="handlePhone(this)" onkeydown="focusNext(event,'f-address')"/>
       <div class="hint" id="phone-hint">10 digits · no spaces or dashes</div>
       <div class="hint err" id="phone-err">Must be exactly 10 digits</div>
     </div>
 
     <div class="card">
       <div class="label">Address <span class="label-opt">optional</span></div>
-      <input class="inp" type="text" placeholder="123 Main St" id="f-address" autocomplete="street-address"/>
+      <input class="inp" type="text" placeholder="123 Main St" id="f-address" autocomplete="street-address" onkeydown="focusNext(event,'f-notes')"/>
     </div>
 
     <div class="card">
@@ -388,7 +388,7 @@
 
     <div class="card referred-card" id="referred-card">
       <div class="label">Referred by <span class="label-opt">optional</span></div>
-      <input class="inp" type="text" placeholder="Customer name" id="f-referred"/>
+      <input class="inp" type="text" placeholder="Customer name" id="f-referred" onkeydown="if(event.key==='Enter'){event.preventDefault();submitForm();}"/>
     </div>
 
     <div id="instant-sms-wrap" style="display:none; margin: 0 0 16px 0;">
@@ -429,6 +429,13 @@
   }
 
   let selectedType = null;
+
+  function focusNext(event, nextId) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      document.getElementById(nextId).focus();
+    }
+  }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
