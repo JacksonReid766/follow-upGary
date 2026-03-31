@@ -355,7 +355,7 @@
     </div>
 
     <div class="card">
-      <div class="label">Phone number</div>
+      <div class="label">Phone number <span class="label-opt">optional</span></div>
       <input class="inp" type="tel" inputmode="numeric" placeholder="6155550100" id="f-phone" maxlength="10" oninput="handlePhone(this)"/>
       <div class="hint" id="phone-hint">10 digits · no spaces or dashes</div>
       <div class="hint err" id="phone-err">Must be exactly 10 digits</div>
@@ -467,7 +467,7 @@
       valid = false;
     }
 
-    if (phone.length !== 10) {
+    if (phone.length > 0 && phone.length !== 10) {
       document.getElementById('f-phone').classList.add('has-error');
       document.getElementById('phone-err').style.display = 'block';
       document.getElementById('phone-hint').style.display = 'none';
